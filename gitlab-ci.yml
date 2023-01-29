@@ -1,0 +1,54 @@
+image: mcr.microsoft.com/dotnet/sdk:6.0
+
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - dotnet build
+
+run unit tests:
+  stage: test
+  script:
+    - dotnet test
+
+deploy DEV:
+  stage: deploy
+  environment: development
+  script:
+    - echo "TODO"
+  except:
+    - main
+
+nuget DEV:
+  stage: deploy
+  environment: development
+  script:
+    - export VERSION=$(echo $(date '+%Y.%-m.%-d').$CI_PIPELINE_IID)-prerelease
+    - dotnet pack --configuration Release -p:PackageVersion=$VERSION
+    - dotnet nuget add source "https://gitlab.com/api/v4/projects/41948045/packages/nuget/index.json" --name ShelfieNuggets --username shelfie-nugget --password kUhoNMQzatBmTqMzV1Kq --store-password-in-clear-text
+    - dotnet nuget push "*/bin/Release/*.$VERSION.nupkg" --source ShelfieNuggets
+  except:
+    - main
+
+deploy:
+  stage: deploy
+  environment: production
+  script:
+    - echo "TODO"
+  only:
+    - main
+
+nuget:
+  stage: deploy
+  environment: production
+  script:
+    - export VERSION=$(echo $(date '+%Y.%-m.%-d').$CI_PIPELINE_IID)
+    - dotnet pack --configuration Release -p:PackageVersion=$VERSION
+    - dotnet nuget add source "https://gitlab.com/api/v4/projects/41948045/packages/nuget/index.json" --name ShelfieNuggets --username shelfie-nugget --password kUhoNMQzatBmTqMzV1Kq --store-password-in-clear-text
+    - dotnet nuget push "*/bin/Release/*.$VERSION.nupkg" --source ShelfieNuggets
+  only:
+    - main

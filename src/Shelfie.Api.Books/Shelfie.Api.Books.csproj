@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Shelfie.Api.Books.DataAccess\Shelfie.Api.Books.DataAccess.csproj" />
+        <ProjectReference Include="..\Shelfie.Api.Books.Models\Shelfie.Api.Books.Models.csproj" />
+        <ProjectReference Include="..\Shelfie.Libs.Common\Shelfie.Libs.Common.csproj" />
+    </ItemGroup>
+
+</Project>
